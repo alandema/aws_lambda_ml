@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  Environment:
+    Type: String
+    AllowedValues:
+      - dev
+      - prod
+    Default: dev
+  
+Mappings:
+  dev:
+    DeploymentConfig:
+      Location: us-wes1
+      Environment: dev
+
+Globals:
+  Function:
+    Runtime: python3.11
+    Environment:
+      Variables:
+        LOCATION: ${Mappings.dev.DeploymentConfig.Location}
+
+Resources:
+  MyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: lambda_handler.lambda_handler
+      Policies:
+        - AWSLambdaRole
+        - AmazonDynamoDBFullAccess
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Resource: '*'
+      Environment:
+        Variables:
+          ENV: ${Mappings.dev.DeploymentConfig.Environment}
