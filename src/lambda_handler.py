@@ -7,12 +7,12 @@ from vertexai.generative_models import GenerativeModel
 from dotenv import load_dotenv
 load_dotenv('config.env')
 def lambda_handler(event, context):
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'creds.json'
+    credentials = service_account.Credentials.from_service_account_info(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
         
     project_id = os.environ["PROJECT_ID"]
     
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id, location="us-central1", credentials=credentials)
 
     model = GenerativeModel("gemini-1.5-flash-001")
 
