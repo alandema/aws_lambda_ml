@@ -6,11 +6,12 @@ from vertexai.generative_models import GenerativeModel
 
 from dotenv import load_dotenv
 load_dotenv('config.env')
+
+
 def lambda_handler(event, context):
     credentials = service_account.Credentials.from_service_account_info(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
-        
+
     project_id = os.environ["PROJECT_ID"]
-    
 
     vertexai.init(project=project_id, location="us-central1", credentials=credentials)
 
@@ -26,8 +27,9 @@ def lambda_handler(event, context):
         'body': json.dumps('Hello from Lambda!')
     }
 
+
 if __name__ == "__main__":
-    with open('src\\test\\events\\test_event.json','r') as file:
+    with open('../test/events/test_event.json', 'r') as file:
         event = json.load(file)
     r = lambda_handler(event, None)
     print(r)
