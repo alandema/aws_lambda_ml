@@ -2,32 +2,22 @@ import google.auth
 import os
 import json
 import vertexai
-from google.oauth2 import service_account
-from vertexai.generative_models import GenerativeModel
-import base64
+import google.generativeai as genai
+import os
+import google.generativeai as genai
 
 from dotenv import load_dotenv
 load_dotenv('config.env')
 
 
-def decode_creds():
-    credentials = json.loads(base64.b64decode(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]).decode("utf-8"))
-    return credentials
+GOOGLE_API_KEY = os.environ["GOOGLE_API_KEY"]
+genai.configure(api_key=GOOGLE_API_KEY)
 
 
 def lambda_handler(event, context):
-    credentials = service_account.Credentials.from_service_account_info(decode_creds(),
-                                                                        scopes=["https://www.googleapis.com/auth/cloud-platform"])
-
-    project_id = os.environ["PROJECT_ID"]
-
-    vertexai.init(project=project_id, location="us-central1", credentials=credentials)
-
-    model = GenerativeModel("gemini-1.5-flash-001")
-
-    response = model.generate_content(
-        "What's a good name for a flower shop that specializes in selling bouquets of dried flowers?"
-    )
+    model = genai.GenerativeModel('gemini-1.5-flash')
+    response = model.generate_content("Give me python code to sort a list")
+    print(response.text)
 
     print(response.text)
     return {
