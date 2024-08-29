@@ -1,1 +1,6 @@
-{"test":"alandm"}
+{
+    "name":"Alan",
+    "age":25,
+    "scenario":"space",
+    "style":"romance"
+}
