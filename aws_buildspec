@@ -17,6 +17,4 @@ phases:
     commands:
       - sam build --template template.yaml --build-dir ./build  --manifest requirements.txt
       - sam package --template-file ./build/template.yaml --output-template-file ./build/packaged-template.yaml --s3-bucket ${S3_BUCKET}
-      - sam deploy --guided
-
-    
+      - sam deploy --template-file ./build/packaged-template.yaml --stack-name ${STACK_NAME} --capabilities CAPABILITY_IAM
