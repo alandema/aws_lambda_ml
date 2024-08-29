@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+    commands:
+      - echo "Hello World"
+      - aws secretsmanager get-secret-value --secret-id ${SECRET_NAME} | jq --raw-output '.SecretString' >> config.env
+      - ls -la config.env
+      - cp config.env ./src
+      - pip install -r requirements.txt
+      - test -f deploy_init.py && python deploy_init.py $(Environment)
+      - pip install cfn-flip
+  
+  build:
+    commands:
+      - sam build --template template.yaml --build-dir ./build  --manifest requirements.txt
+      - sam package --template-file ./build/template.yaml --output-template-file ./build/packaged-template.yaml --s3-bucket ${S3_BUCKET}
+      - sam deploy --guided
+
+    
