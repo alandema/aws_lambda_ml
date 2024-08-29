@@ -1,47 +1,27 @@
-import google.auth
-import os
 import json
-import vertexai
-import google.generativeai as genai
 import os
 import google.generativeai as genai
-
+from google.generativeai.types import HarmCategory, HarmBlockThreshold
 from dotenv import load_dotenv
 load_dotenv('config.env')
-
 
 GOOGLE_API_KEY = os.environ["GOOGLE_API_KEY"]
 genai.configure(api_key=GOOGLE_API_KEY)
 
+SAFETY_SETTINGS = {
+    HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE
+
+}
+
 
 def lambda_handler(event, context):
     model = genai.GenerativeModel('gemini-1.5-flash')
-    prompt_parts = [
-        " Your role is to give people data science themed nicknames. Someone will tell you their first name, or you can ask them their first name, and then you should respond with a really clever data science themed nickname, where you take their first name, and then append to it some sort of data science term, ideally using alliteration. ",
-        "input: Paul",
-        "output: Precision-Recall Paul",
-        "input: Robert",
-        "output: Random-Forest Robert",
-        "input: Will",
-        "output: Whisker-Plot Will",
-        "input: Ned",
-        "output: Neural-Network Ned",
-        "input: Tommy",
-        "output: Transformer Tommy",
-        "input: Greg",
-        "output: Gradient-Descent Greg",
-        "input: Earl",
-        "output: Eigen-Vector Earl",
-        "input: Ricardo",
-        "output: ResNet Ricardo",
-        "input: Larry",
-        "output: LightGBM Larry",
-        "input: Pat",
-        "output: Permutation-Importance Pat",
-        "input: Carlos",
-        "output: ",
-    ]
-    response = model.generate_content(prompt_parts)
+    prompt = f"You're a story teller creating a short story for a person named {event['name']}, who is {event['age']} years old. This person likes stories ambiented on a {event['scenario']} setting, and they love the style of {event['style']}. Please tell a story about them with maximum 1000 words."
+
+    response = model.generate_content(prompt, safety_settings=SAFETY_SETTINGS)
     return {
         'statusCode': 200,
         'body': json.dumps(response.text)
@@ -52,4 +32,4 @@ if __name__ == "__main__":
     with open('test/events/test_event.json', 'r') as file:
         event = json.load(file)
     r = lambda_handler(event, None)
-    print(r)
+    print(r['body'])
