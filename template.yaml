@@ -28,13 +28,6 @@ Resources:
     Properties:
       CodeUri: src/
       Handler: lambda_handler.lambda_handler
-      Policies:
-        - AWSLambdaRole
-        - AmazonDynamoDBFullAccess
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Resource: '*'
       Environment:
         Variables:
           ENV: ${Mappings.dev.DeploymentConfig.Environment}
