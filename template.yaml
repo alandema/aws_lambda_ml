@@ -12,15 +12,20 @@ Parameters:
 Mappings:
   dev:
     DeploymentConfig:
-      Location: us-wes1
+      Location: us-west1
       Environment: dev
+  prod:
+     DeploymentConfig:
+      Location: us-west2
+      Environment: prod 
 
 Globals:
   Function:
     Runtime: python3.11
     Environment:
       Variables:
-        LOCATION: ${Mappings.dev.DeploymentConfig.Location}
+        LOCATION: ${{Mappings.dev.DeploymentConfig.Location}}
+        ENV: ${{Mappings.dev.DeploymentConfig.Environment}}
 
 Resources:
   MyFunction:
@@ -30,4 +35,4 @@ Resources:
       Handler: lambda_handler.lambda_handler
       Environment:
         Variables:
-          ENV: ${Mappings.dev.DeploymentConfig.Environment}
+          ENV_VAR: ENV_VAR
