@@ -24,8 +24,8 @@ Globals:
     Runtime: python3.11
     Environment:
       Variables:
-        LOCATION: !Sub ${AWS::StackName}
-        ENV: !Sub ${AWS::StackName}
+        LOCATION: !FindInMap [dev, DeploymentConfig, Location]
+        ENV: !FindInMap [dev, DeploymentConfig, Environment]
 
 Resources:
   MyFunction:
@@ -35,4 +35,4 @@ Resources:
       Handler: lambda_handler.lambda_handler
       Environment:
         Variables:
-          ENV_VAR: ENV_VAR
+          STACK_NAME: !Sub ${AWS::StackName}
