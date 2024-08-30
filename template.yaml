@@ -24,8 +24,8 @@ Globals:
     Runtime: python3.11
     Environment:
       Variables:
-        LOCATION: ${{Mappings.dev.DeploymentConfig.Location}}
-        ENV: ${{Mappings.dev.DeploymentConfig.Environment}}
+        LOCATION: !Sub ${AWS::StackName}
+        ENV: !Sub ${AWS::StackName}
 
 Resources:
   MyFunction:
