@@ -22,6 +22,7 @@ Mappings:
 Globals:
   Function:
     Runtime: python3.11
+    Timeout: 60
     Environment:
       Variables:
         LOCATION: !FindInMap [dev, DeploymentConfig, Location]
