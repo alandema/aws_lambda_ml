@@ -18,6 +18,7 @@ SAFETY_SETTINGS = {
 
 def lambda_handler(event, context):
     model = genai.GenerativeModel('gemini-1.5-flash')
+
     prompt = f"You're a story teller creating a short story for a person named {event['name']}, who is {event['age']} years old. This person likes stories ambiented on a {event['scenario']} setting, and they love the style of {event['style']}. Please tell a story about them with maximum 1000 words."
 
     response = model.generate_content(prompt, safety_settings=SAFETY_SETTINGS)
